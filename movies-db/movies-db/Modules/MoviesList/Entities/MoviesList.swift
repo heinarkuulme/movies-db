@@ -6,6 +6,9 @@
 //
 
 // MARK: - Movies list
+
+class MoviesListResponse: NetworkResponse<MoviesList> {}
+
 struct MoviesList: Codable {
     let page: Int?
     let results: [Movie]?
@@ -20,7 +23,6 @@ struct MoviesList: Codable {
 
 //MARK - Result
 struct Movie: Codable {
-    let adult: Bool?
     let backdropPath: String?
     let genreIDS: [Int]?
     let id: Int?
@@ -32,7 +34,6 @@ struct Movie: Codable {
     let voteCount: Int?
 
     enum CodingKeys: String, CodingKey {
-        case adult
         case backdropPath = "backdrop_path"
         case genreIDS = "genre_ids"
         case id

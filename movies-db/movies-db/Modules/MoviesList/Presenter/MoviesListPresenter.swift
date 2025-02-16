@@ -13,19 +13,21 @@ class MoviesListPresenter: MoviesListPresenterProtocol {
     weak var view: MoviesListViewProtocol?
     var interactor: MoviesListInteractorInputProtocol?
     var router: MoviesListRouterProtocol?
+    private var moviesList: MoviesList?
     
     func viewDidLoad() {
         interactor?.fetchMovies()
     }
 
-    func didSelectItem() {
+    func didSelectItem(index: Int) {
         
     }
     
 }
 
 extension MoviesListPresenter: MoviesListInteractorOutputProtocol {
-    func moviesFetched() {
+    func moviesFetched(_ moviesList: MoviesList) {
+        self.moviesList = moviesList
         print("view -> show movies")
     }
 

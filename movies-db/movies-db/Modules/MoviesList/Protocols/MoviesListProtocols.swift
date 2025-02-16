@@ -12,7 +12,7 @@ protocol MoviesListRouterProtocol: AnyObject {
 }
 
 protocol MoviesListViewProtocol: AnyObject {
-    func showMovies()
+    func showMovies(_ movies: [Movie])
     func showError()
 }
 
@@ -21,7 +21,7 @@ protocol MoviesListPresenterProtocol: AnyObject {
     var interactor: MoviesListInteractorInputProtocol? { get set }
     var router: MoviesListRouterProtocol? { get set }
     func viewDidLoad()
-    func didSelectItem()
+    func didSelectItem(index: Int)
 }
 
 protocol MoviesListInteractorInputProtocol: AnyObject {
@@ -30,6 +30,6 @@ protocol MoviesListInteractorInputProtocol: AnyObject {
 }
 
 protocol MoviesListInteractorOutputProtocol: AnyObject {
-    func moviesFetched()
+    func moviesFetched(_ moviesList: MoviesList)
     func moviesFetchedFailed()
 }

@@ -41,8 +41,7 @@ class MoviesListView: BaseViewController {
 }
 
 extension MoviesListView: MoviesListViewProtocol {
-    
-    func showMovies() {
+    func showMovies(_ movies: [Movie]) {
         
     }
 

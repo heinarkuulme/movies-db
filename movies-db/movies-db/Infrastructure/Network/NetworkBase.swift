@@ -17,6 +17,14 @@ enum RequestEncondig {
     case url
 }
 
+var isDebugEnabled: Bool {
+    #if DEBUG
+    return true
+    #else
+    return false
+    #endif
+}
+
 protocol RequestBase {
     func makeRequest<Y: Codable, T: NetworkResponse<Y>>(
         printResponse: Bool,
@@ -140,6 +148,7 @@ extension RequestBase {
                     objResponse.response = try objResponse.parseData(data: data)
                     self.printResponseToConsole(
                         url: url,
+                        responseData: data,
                         statusCode: statusCode,
                         cUrl: requestCurl,
                         taskDuration: Date().timeIntervalSince(reqStart),
@@ -244,6 +253,8 @@ extension RequestBase {
             if let error = error {
                 responseString += "\n[NETWORK_ERROR]: " + error.message
             }
+            
+            NetworkLogger.log(responseString, event: error != nil ? .error : .debug)
         }
     }
 }
