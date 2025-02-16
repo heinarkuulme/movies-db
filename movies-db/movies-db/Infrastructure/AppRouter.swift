@@ -8,6 +8,7 @@
 import UIKit
 
 class AppRouter {
+    
     private let window: UIWindow?
     
     init(window: UIWindow?) {
@@ -15,6 +16,9 @@ class AppRouter {
     }
     
     func start() {
-        
+        let moviesListModule = MoviesListRouter.createMoviesList()
+        let navigation = BaseNavigationController(rootViewController: moviesListModule)
+        self.window?.rootViewController = navigation
+        self.window?.makeKeyAndVisible()
     }
 }

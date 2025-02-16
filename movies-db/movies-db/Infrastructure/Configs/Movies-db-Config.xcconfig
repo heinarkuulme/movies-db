@@ -1,0 +1,18 @@
+//
+//  Movies-db-Config.xcconfig
+//  movies-db
+//
+//  Created by Heinar Kuulme on 16/02/25.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+//Arquivo de configuração para customizar diferentes versões do APP, como por exemplo dev, hml e prd
+APP_DISPLAY_NAME = Movies Database
+
+baseUrl = api.themoviedb.org/3
+
+apiToken = eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMTE2NWJmYTczNDI1YjQyZGRjOTA0ODIzYjJkZDM3OCIsIm5iZiI6MTQyNDc5ODMwMS45MSwic3ViIjoiNTRlY2IyNWRjM2EzNjg2ZDY0MDAyMzY3Iiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.Pu7IlBUAmeHav4-SZ3IbvjxIL73vcej8FRV_hCT7aaI
+
+

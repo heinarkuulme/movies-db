@@ -284,6 +284,8 @@
 /* Begin XCBuildConfiguration section */
 		667C12C02D62548300777576 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 667C12982D62548200777576 /* movies-db */;
+			baseConfigurationReferenceRelativePath = "Infrastructure/Configs/Movies-db-Config.xcconfig";
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -292,7 +294,7 @@
 				DEVELOPMENT_TEAM = 96VQ8X4H7K;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "movies-db/Infrastructure/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Movies Database";
+				INFOPLIST_KEY_CFBundleDisplayName = "${APP_DISPLAY_NAME}";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = "";
@@ -313,6 +315,8 @@
 		};
 		667C12C12D62548300777576 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 667C12982D62548200777576 /* movies-db */;
+			baseConfigurationReferenceRelativePath = "Infrastructure/Configs/Movies-db-Config.xcconfig";
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -321,7 +325,7 @@
 				DEVELOPMENT_TEAM = 96VQ8X4H7K;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "movies-db/Infrastructure/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Movies Database";
+				INFOPLIST_KEY_CFBundleDisplayName = "${APP_DISPLAY_NAME}";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = "";
@@ -342,6 +346,8 @@
 		};
 		667C12C22D62548300777576 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 667C12982D62548200777576 /* movies-db */;
+			baseConfigurationReferenceRelativePath = "Infrastructure/Configs/Movies-db-Config.xcconfig";
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -405,6 +411,8 @@
 		};
 		667C12C32D62548300777576 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 667C12982D62548200777576 /* movies-db */;
+			baseConfigurationReferenceRelativePath = "Infrastructure/Configs/Movies-db-Config.xcconfig";
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -461,6 +469,8 @@
 		};
 		667C12C52D62548300777576 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 667C12982D62548200777576 /* movies-db */;
+			baseConfigurationReferenceRelativePath = "Infrastructure/Configs/Movies-db-Config.xcconfig";
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -480,6 +490,8 @@
 		};
 		667C12C62D62548300777576 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 667C12982D62548200777576 /* movies-db */;
+			baseConfigurationReferenceRelativePath = "Infrastructure/Configs/Movies-db-Config.xcconfig";
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -499,6 +511,8 @@
 		};
 		667C12C82D62548300777576 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 667C12982D62548200777576 /* movies-db */;
+			baseConfigurationReferenceRelativePath = "Infrastructure/Configs/Movies-db-Config.xcconfig";
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -516,6 +530,8 @@
 		};
 		667C12C92D62548300777576 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 667C12982D62548200777576 /* movies-db */;
+			baseConfigurationReferenceRelativePath = "Infrastructure/Configs/Movies-db-Config.xcconfig";
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
