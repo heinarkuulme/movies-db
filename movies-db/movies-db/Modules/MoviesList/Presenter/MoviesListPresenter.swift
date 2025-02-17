@@ -13,30 +13,56 @@ class MoviesListPresenter: MoviesListPresenterProtocol {
     weak var view: MoviesListViewProtocol?
     var interactor: MoviesListInteractorInputProtocol?
     var router: MoviesListRouterProtocol?
-    private var moviesList: MoviesList?
+    
     private var moviesConfig: [MovieGridConfig] = []
+    private var currentPage: Int = 1
+    private var totalPages: Int = 1
+    private var favoriteMovies: [Int] = []
     
     func viewDidLoad() {
-        interactor?.fetchMovies()
+        interactor?.fetchFavoriteMovies()
+        interactor?.fetchMovies(page: currentPage, favoriteMovies: favoriteMovies)
     }
 
-    func didSelectItem(index: Int) {
-        
+    func didSelectItem(movie: MovieGridConfig) {
+        interactor?.toggleFavorite(for: movie)
     }
     
+    func fetchMoreMovies() {
+        if currentPage < totalPages {
+            let nextPage = currentPage + 1
+            interactor?.fetchMovies(page: nextPage, favoriteMovies: favoriteMovies)
+        }
+    }
 }
 
 extension MoviesListPresenter: MoviesListInteractorOutputProtocol {
-    
-    func moviesConfigFacade(_ moviesConfig: [MovieGridConfig]) {
-        self.moviesConfig = moviesConfig
-        view?.showMovies(moviesConfig)
+    func favoriteMoviesFetched(ids: [Int]) {
+        if self.favoriteMovies.isEmpty {
+            favoriteMovies = ids
+        } else {
+            favoriteMovies.append(contentsOf: ids)
+        }
     }
 
-    func moviesFetched(_ moviesList: MoviesList) {
-        self.moviesList = moviesList
-        if let movies = self.moviesList?.results {
-            interactor?.getMoviesConfig(movies)
+    func moviesFetched(_ moviesConfig: [MovieGridConfig], page: Int, totalPages: Int) {
+        if page == 1 {
+            self.moviesConfig = moviesConfig
+        } else {
+            self.moviesConfig.append(contentsOf: moviesConfig)
+        }
+        
+        self.currentPage = page
+        self.totalPages = totalPages
+        view?.showMovies(self.moviesConfig)
+    }
+    
+    func favoriteMovieUpdated(ids: [Int], for movieID: Int, newState: Bool) {
+        if let index = moviesConfig.firstIndex(where: { $0.id == movieID }) {
+            moviesConfig[index].isFavorited = newState
+            favoriteMovies = ids
+            let updatedMovie = moviesConfig[index]
+            view?.updateFavorite(for: updatedMovie)
         }
     }
 

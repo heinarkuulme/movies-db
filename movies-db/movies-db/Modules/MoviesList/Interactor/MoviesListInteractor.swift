@@ -8,17 +8,19 @@
 import UIKit
 
 class MoviesListInteractor: MoviesListInteractorInputProtocol {
-    
+
     weak var presenter: MoviesListInteractorOutputProtocol?
     
-    func fetchMovies() {
-        MoviesService.Endpoints.discover
+    func fetchMovies(page: Int, favoriteMovies: [Int]) {
+        MoviesService.Endpoints.discover(page: page)
             .makeRequest(printResponse: true) { (result: Result<MoviesListResponse, NetworkError>) in
                 
                 switch result {
                 case .success(let moviesResponse):
                     if let moviesList = moviesResponse.response {
-                        self.presenter?.moviesFetched(moviesList)
+                        let totalPages = moviesList.totalPages ?? 1
+                        let configs = self.getMoviesConfig(moviesList.results, favoriteMovies: favoriteMovies)
+                        self.presenter?.moviesFetched(configs, page: page, totalPages: totalPages)
                     }
                 case .failure(let error):
                     print("Interactor Error: \(error)")
@@ -26,8 +28,29 @@ class MoviesListInteractor: MoviesListInteractorInputProtocol {
             }
     }
     
-    func getMoviesConfig(_ movies: [Movie]) {
-        let configs: [MovieGridConfig] = movies.compactMap { movie in
+    func fetchFavoriteMovies() {
+        let favoriteMovies = UserDefaultsManager.getFavoritedMovies()
+        presenter?.favoriteMoviesFetched(ids: favoriteMovies)
+    }
+
+    func toggleFavorite(for movie: MovieGridConfig) {
+        var favorites = UserDefaultsManager.getFavoritedMovies()
+        let newState: Bool
+
+        if favorites.contains(movie.id) {
+            favorites.removeAll { $0 == movie.id }
+            newState = false
+        } else {
+            favorites.append(movie.id)
+            newState = true
+        }
+
+        UserDefaultsManager.favoriteMovies.setObject(object: favorites)
+        presenter?.favoriteMovieUpdated(ids: favorites, for: movie.id, newState: newState)
+    }
+    
+    private func getMoviesConfig(_ movies: [Movie]?, favoriteMovies: [Int]) -> [MovieGridConfig] {
+        let configs: [MovieGridConfig] = movies?.compactMap { movie in
             guard let id = movie.id,
                   let title = movie.title,
                   let voteAverage = movie.voteAverage,
@@ -44,11 +67,10 @@ class MoviesListInteractor: MoviesListInteractorInputProtocol {
                 releaseDate: releaseDate,
                 coverURL: coverURL,
                 rating: Float(voteAverage),
-                isFavorited: false
+                isFavorited: favoriteMovies.contains(id)
             )
-        }
-        
-        presenter?.moviesConfigFacade(configs)
+        } ?? []
+        return configs
     }
     
 }

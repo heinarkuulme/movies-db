@@ -25,6 +25,7 @@ class MoviesListView: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+        movieGridView.delegate = self
         presenter?.viewDidLoad()
     }
     
@@ -45,6 +46,12 @@ class MoviesListView: BaseViewController {
 }
 
 extension MoviesListView: MoviesListViewProtocol {
+    func updateFavorite(for movie: MovieGridConfig) {
+        DispatchQueue.main.async {
+            self.movieGridView.updateFavorite(for: movie)
+        }
+    }
+
     func showMovies(_ movies: [MovieGridConfig]) {
         DispatchQueue.main.async {
             self.movieGridView.setConfig(movies)
@@ -54,5 +61,21 @@ extension MoviesListView: MoviesListViewProtocol {
     func showError() {
         
     }
+    
+}
+
+extension MoviesListView: MovieGridViewDelegate {
+    func movieGridView(_ gridView: MovieGridView, didSelectMovie movie: MovieGridConfig) {
+        
+    }
+
+    func movieGridView(_ gridView: MovieGridView, didToggleFavoriteFor movie: MovieGridConfig) {
+        presenter?.didSelectItem(movie: movie)
+    }
+
+    func moviesGridViewDidReachEnd(_ gridView: MovieGridView) {
+        presenter?.fetchMoreMovies()
+    }
+
     
 }

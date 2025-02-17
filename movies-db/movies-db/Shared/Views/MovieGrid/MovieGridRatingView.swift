@@ -80,14 +80,20 @@ class MovieGridRatingView: UIView {
     }
 
     private func updateFillLayer() {
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+
         let percentage = CGFloat(rating / 10.0)
         let fillWidth = bounds.width * percentage
         fillLayer.frame = CGRect(x: 0, y: 0, width: fillWidth, height: bounds.height)
         fillLayer.backgroundColor = fillColor(for: rating).cgColor
         fillLayer.cornerRadius = bounds.height / 2
+
         if fillLayer.superlayer == nil {
             layer.insertSublayer(fillLayer, at: 0)
         }
+
+        CATransaction.commit()
     }
     
     func configure(with rating: Float) {

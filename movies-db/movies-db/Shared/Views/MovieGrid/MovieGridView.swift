@@ -28,6 +28,7 @@ public struct MovieGridConfig {
 public protocol MovieGridViewDelegate: AnyObject {
     func movieGridView(_ gridView: MovieGridView, didSelectMovie movie: MovieGridConfig)
     func movieGridView(_ gridView: MovieGridView, didToggleFavoriteFor movie: MovieGridConfig)
+    func moviesGridViewDidReachEnd(_ gridView: MovieGridView)
 }
 
 public class MovieGridView: UIView {
@@ -39,6 +40,7 @@ public class MovieGridView: UIView {
         static let elementsHeight: CGFloat = 20.0
         static let cellExtraSpacing: CGFloat = 24
         static let totalHorizontalPadding: CGFloat = Constants.horizontalInset * 2 + Constants.cellSpacing
+        static let sizeRemainigToFetchMoreItens: CGFloat = 100.0
         
         static let cellIdentifier = "MovieGridCell"
     }
@@ -60,6 +62,7 @@ public class MovieGridView: UIView {
     public weak var delegate: MovieGridViewDelegate?
     
     private var config: [MovieGridConfig] = []
+    private var isFetchingMore: Bool = false
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -83,7 +86,20 @@ public class MovieGridView: UIView {
     
     public func setConfig(_ config: [MovieGridConfig]) {
         self.config = config
-        collectionView.reloadData()
+        isFetchingMore = false
+        UIView.performWithoutAnimation {
+            self.collectionView.reloadData()
+        }
+    }
+    
+    public func updateFavorite(for movie: MovieGridConfig) {
+        if let index = self.config.firstIndex(where: { $0.id == movie.id }) {
+            self.config[index] = movie
+            let indexPath = IndexPath(item: index, section: 0)
+            UIView.performWithoutAnimation {
+                self.collectionView.reloadItems(at: [indexPath])
+            }
+        }
     }
 }
 
@@ -126,6 +142,17 @@ extension MovieGridView: UICollectionViewDataSource, UICollectionViewDelegateFlo
         let spacing: CGFloat = Constants.cellExtraSpacing
         let height = imageHeight + titleHeight + releaseDateHeight + ratingHeight + spacing
         return CGSize(width: width, height: height)
+    }
+    
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let frameHeight = scrollView.frame.size.height
+        
+        if offsetY > contentHeight - frameHeight - Constants.sizeRemainigToFetchMoreItens, !isFetchingMore {
+            isFetchingMore = true
+            delegate?.moviesGridViewDidReachEnd(self)
+        }
     }
 }
 

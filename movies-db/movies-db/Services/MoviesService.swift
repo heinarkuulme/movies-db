@@ -9,15 +9,15 @@ import Foundation
 
 class MoviesService {
     enum Endpoints: RequestBase {
-        case discover
-        case search(query: String)
+        case discover(page: Int)
+        case search(query: String, page: Int)
         
         var path: String {
             switch self {
             case .discover:
                 "/discover/movie"
-            case .search(let query):
-                "/search/movie?query=\(query)"
+            case .search(let query, let page):
+                "/search/movie?query=\(query)&page=\(page)"
             }
         }
         
@@ -35,13 +35,22 @@ class MoviesService {
         
         var params: [String : Any]? {
             switch self {
-            default: nil
+            case .discover(let page):
+                ["page": page]
+            case .search(let query, let page):
+                ["page": page, "query": query]
             }
         }
         
         var baseUrl: String {
             switch self {
             default: BaseUrls.common.rawValue
+            }
+        }
+        
+        var enconding: RequestEncondig {
+            switch self {
+            default: .url
             }
         }
     }

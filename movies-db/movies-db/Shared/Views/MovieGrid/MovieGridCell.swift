@@ -101,6 +101,12 @@ class MovieGridCell: UICollectionViewCell {
         fatalError("init(coder:) não foi implementado")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        favoriteButton.transform = .identity
+        favoriteContainerView.transform = .identity
+    }
+    
     private func setupViews() {
         contentView.addSubview(containerView)
         containerView.addSubview(coverImageView)
@@ -170,12 +176,13 @@ class MovieGridCell: UICollectionViewCell {
             self.favoriteButton.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
             self.favoriteContainerView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
         }, completion: { _ in
-            UIView.animate(withDuration: 0.1) {
+            UIView.animate(withDuration: 0.1, animations: {
                 self.favoriteButton.transform = .identity
                 self.favoriteContainerView.transform = .identity
-            }
+            }, completion: { _ in
+                self.updateFavoriteState(isFavorited: movie.isFavorited)
+                self.delegate?.movieGridCell(self, didToggleFavoriteFor: movie)
+            })
         })
-        updateFavoriteState(isFavorited: movie.isFavorited)
-        delegate?.movieGridCell(self, didToggleFavoriteFor: movie)
     }
 }

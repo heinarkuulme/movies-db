@@ -13,6 +13,7 @@ protocol MoviesListRouterProtocol: AnyObject {
 
 protocol MoviesListViewProtocol: AnyObject {
     func showMovies(_ movies: [MovieGridConfig])
+    func updateFavorite(for movie: MovieGridConfig)
     func showError()
 }
 
@@ -21,17 +22,20 @@ protocol MoviesListPresenterProtocol: AnyObject {
     var interactor: MoviesListInteractorInputProtocol? { get set }
     var router: MoviesListRouterProtocol? { get set }
     func viewDidLoad()
-    func didSelectItem(index: Int)
+    func didSelectItem(movie: MovieGridConfig)
+    func fetchMoreMovies()
 }
 
 protocol MoviesListInteractorInputProtocol: AnyObject {
     var presenter: MoviesListInteractorOutputProtocol? { get set }
-    func fetchMovies()
-    func getMoviesConfig(_ movies: [Movie])
+    func fetchMovies(page: Int, favoriteMovies: [Int])
+    func fetchFavoriteMovies()
+    func toggleFavorite(for movie: MovieGridConfig)
 }
 
 protocol MoviesListInteractorOutputProtocol: AnyObject {
-    func moviesFetched(_ moviesList: MoviesList)
-    func moviesConfigFacade(_ moviesConfig: [MovieGridConfig])
+    func moviesFetched(_ moviesConfig: [MovieGridConfig], page: Int, totalPages: Int)
+    func favoriteMoviesFetched(ids: [Int])
     func moviesFetchedFailed()
+    func favoriteMovieUpdated(ids: [Int], for movieID: Int, newState: Bool)
 }
