@@ -30,14 +30,18 @@ public protocol MovieGridViewDelegate: AnyObject {
     func movieGridView(_ gridView: MovieGridView, didToggleFavoriteFor movie: MovieGridConfig)
 }
 
-fileprivate enum Constants {
-    static let horizontalInset: CGFloat = 16
-    static let cellSpacing: CGFloat = 12
-    static let cellIdentifier = "MovieGridCell"
-    static let imageCornerRadius: CGFloat = 10
-}
-
 public class MovieGridView: UIView {
+    
+    private enum Constants {
+        static let horizontalInset: CGFloat = 16
+        static let cellSpacing: CGFloat = 12
+        static let imageRatio: CGFloat = (750.0 / 500.0)
+        static let elementsHeight: CGFloat = 20.0
+        static let cellExtraSpacing: CGFloat = 24
+        static let totalHorizontalPadding: CGFloat = Constants.horizontalInset * 2 + Constants.cellSpacing
+        
+        static let cellIdentifier = "MovieGridCell"
+    }
     
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -114,13 +118,12 @@ extension MovieGridView: UICollectionViewDataSource, UICollectionViewDelegateFlo
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let totalHorizontalPadding = Constants.horizontalInset * 2 + Constants.cellSpacing
-        let width = (collectionView.bounds.width - totalHorizontalPadding) / 2
-        let imageHeight = width * (750.0 / 500.0)
-        let titleHeight: CGFloat = 20
-        let releaseDateHeight: CGFloat = 20
-        let ratingHeight: CGFloat = 20
-        let spacing: CGFloat = 24
+        let width = (collectionView.bounds.width - Constants.totalHorizontalPadding) / 2
+        let imageHeight = width * Constants.imageRatio
+        let titleHeight: CGFloat = Constants.elementsHeight
+        let releaseDateHeight: CGFloat = Constants.elementsHeight
+        let ratingHeight: CGFloat = Constants.elementsHeight
+        let spacing: CGFloat = Constants.cellExtraSpacing
         let height = imageHeight + titleHeight + releaseDateHeight + ratingHeight + spacing
         return CGSize(width: width, height: height)
     }

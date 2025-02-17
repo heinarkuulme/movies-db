@@ -9,12 +9,21 @@ import UIKit
 
 class MovieGridRatingView: UIView {
     
+    private enum Constants {
+        static let starSize: CGFloat = 12.0
+        static let spacing: CGFloat = 4.0
+        static let ratingSpacing: CGFloat = 7.0
+        static let borderWidth: CGFloat = 1.0
+        
+        static let ratingImage: String = "star.fill"
+    }
+    
     private lazy var starImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         imageView.tintColor = .white
-        imageView.image = UIImage(systemName: "star.fill")
+        imageView.image = UIImage(systemName: Constants.ratingImage)
         return imageView
     }()
     
@@ -31,7 +40,7 @@ class MovieGridRatingView: UIView {
         let stack = UIStackView(arrangedSubviews: [starImageView, ratingLabel])
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .horizontal
-        stack.spacing = 4
+        stack.spacing = Constants.spacing
         stack.alignment = .center
         return stack
     }()
@@ -52,15 +61,15 @@ class MovieGridRatingView: UIView {
     private func setupView() {
         backgroundColor = UIColor(white: 0.15, alpha: 1.0)
         layer.borderColor = UIColor.white.withAlphaComponent(0.2).cgColor
-        layer.borderWidth = 1
+        layer.borderWidth = Constants.borderWidth
         layer.cornerRadius = bounds.height / 2
         clipsToBounds = true
         addSubview(stackView)
         NSLayoutConstraint.activate([
             stackView.centerXAnchor.constraint(equalTo: centerXAnchor),
             stackView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            starImageView.widthAnchor.constraint(equalToConstant: 12),
-            starImageView.heightAnchor.constraint(equalToConstant: 12)
+            starImageView.widthAnchor.constraint(equalToConstant: Constants.starSize),
+            starImageView.heightAnchor.constraint(equalToConstant: Constants.starSize)
         ])
     }
     
@@ -89,11 +98,11 @@ class MovieGridRatingView: UIView {
 
     private func fillColor(for rating: Float) -> UIColor {
         if rating >= 7.0 {
-            return UIColor(hex: "#30D158")
+            return UIColor(hex: "#56db78")
         } else if rating >= 4.0 {
-            return UIColor(hex: "#FF9F0A")
+            return UIColor(hex: "#e3ac56")
         } else {
-            return UIColor(hex: "#FF453A")
+            return UIColor(hex: "#ed5e55")
         }
     }
 }
