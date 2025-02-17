@@ -10,6 +10,8 @@
 	<string>${apiToken}</string>
 	<key>BaseUrl</key>
 	<string>https://${baseUrl}</string>
+	<key>BaseImageUrl</key>
+	<string>https://${baseImageUrl}</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

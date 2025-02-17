@@ -12,7 +12,7 @@ protocol MoviesListRouterProtocol: AnyObject {
 }
 
 protocol MoviesListViewProtocol: AnyObject {
-    func showMovies(_ movies: [Movie])
+    func showMovies(_ movies: [MovieGridConfig])
     func showError()
 }
 
@@ -27,9 +27,11 @@ protocol MoviesListPresenterProtocol: AnyObject {
 protocol MoviesListInteractorInputProtocol: AnyObject {
     var presenter: MoviesListInteractorOutputProtocol? { get set }
     func fetchMovies()
+    func getMoviesConfig(_ movies: [Movie])
 }
 
 protocol MoviesListInteractorOutputProtocol: AnyObject {
     func moviesFetched(_ moviesList: MoviesList)
+    func moviesConfigFacade(_ moviesConfig: [MovieGridConfig])
     func moviesFetchedFailed()
 }

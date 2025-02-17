@@ -10,13 +10,11 @@ import UIKit
 class MoviesListView: BaseViewController {
     
     //MARK: - Outlets
-    private lazy var text: UILabel = {
-        let label = UILabel()
-        label.text = "teste"
-        label.textColor = .white
-        label.translatesAutoresizingMaskIntoConstraints = false
+    private lazy var movieGridView: MovieGridView = {
+        let gridView = MovieGridView()
+        gridView.translatesAutoresizingMaskIntoConstraints = false
         
-        return label
+        return gridView
     }()
     
     //MARK: - Variables
@@ -31,18 +29,26 @@ class MoviesListView: BaseViewController {
     }
     
     private func setup() {
-        view.addSubview(text)
+        navigationItem.title = "Descubra"
+        navigationItem.largeTitleDisplayMode = .always
+        navigationController?.navigationBar.prefersLargeTitles = true
+
+        view.addSubview(movieGridView)
         NSLayoutConstraint.activate([
-            text.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            text.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            movieGridView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            movieGridView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            movieGridView.topAnchor.constraint(equalTo: view.topAnchor),
+            movieGridView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
     }
 
 }
 
 extension MoviesListView: MoviesListViewProtocol {
-    func showMovies(_ movies: [Movie]) {
-        
+    func showMovies(_ movies: [MovieGridConfig]) {
+        DispatchQueue.main.async {
+            self.movieGridView.setConfig(movies)
+        }
     }
 
     func showError() {

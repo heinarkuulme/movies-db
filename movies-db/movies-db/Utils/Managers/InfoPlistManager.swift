@@ -11,6 +11,7 @@ final class InfoPlistManager {
     
     enum plistKeys: String {
         case BaseUrl
+        case BaseImageUrl
         case ApiToken
     }
     

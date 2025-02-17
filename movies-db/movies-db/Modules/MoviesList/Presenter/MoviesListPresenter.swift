@@ -14,6 +14,7 @@ class MoviesListPresenter: MoviesListPresenterProtocol {
     var interactor: MoviesListInteractorInputProtocol?
     var router: MoviesListRouterProtocol?
     private var moviesList: MoviesList?
+    private var moviesConfig: [MovieGridConfig] = []
     
     func viewDidLoad() {
         interactor?.fetchMovies()
@@ -26,9 +27,17 @@ class MoviesListPresenter: MoviesListPresenterProtocol {
 }
 
 extension MoviesListPresenter: MoviesListInteractorOutputProtocol {
+    
+    func moviesConfigFacade(_ moviesConfig: [MovieGridConfig]) {
+        self.moviesConfig = moviesConfig
+        view?.showMovies(moviesConfig)
+    }
+
     func moviesFetched(_ moviesList: MoviesList) {
         self.moviesList = moviesList
-        print("view -> show movies")
+        if let movies = self.moviesList?.results {
+            interactor?.getMoviesConfig(movies)
+        }
     }
 
     func moviesFetchedFailed() {
