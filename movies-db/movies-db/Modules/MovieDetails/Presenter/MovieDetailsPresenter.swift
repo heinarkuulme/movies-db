@@ -26,6 +26,11 @@ class MovieDetailsPresenter: MovieDetailsPresenterProtocol {
         guard var details = self.details else { return }
         let newState = !details.isFavorited
         details.isFavorited = newState
+        
+        if let currentImage = view?.getCurrentImage() {
+            details.image = currentImage
+        }
+        
         self.details = details
         self.isFavorite = newState
 
@@ -44,8 +49,8 @@ extension MovieDetailsPresenter: MovieDetailsInteractorOutputProtocol {
         self.isFavorite = isFavorite
     }
 
-    func movieDetailsFetchedFailed() {
-        
+    func movieDetailsFetchedFailed(error: String) {
+        self.view?.showDetailsError(message: error)
     }
 
     func favoriteMovieUpdated(newState: Bool) {

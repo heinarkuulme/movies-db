@@ -24,7 +24,7 @@ class MovieDetailsInteractor: MovieDetailsInteractorInputProtocol {
                         self.presenter?.movieDetailsFetched(details: config)
                     }
                 case .failure(let error):
-                    print("Interactor Error: \(error)")
+                    self.presenter?.movieDetailsFetchedFailed(error: error.message)
                 }
             }
     }

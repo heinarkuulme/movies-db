@@ -10,11 +10,12 @@ import UIKit
 protocol MoviesListRouterProtocol: AnyObject {
     static func createMoviesList() -> UIViewController
     func navigateToMovieDetails(from view: UIViewController, with movieId: Int)
+    func navigateToFavorites(from view: UIViewController)
 }
 
 protocol MoviesListViewProtocol: AnyObject {
     func showMovies(_ movies: [MovieGridConfig])
-    func showError()
+    func showMovieError(message: String)
 }
 
 protocol MoviesListPresenterProtocol: AnyObject {
@@ -23,6 +24,7 @@ protocol MoviesListPresenterProtocol: AnyObject {
     var router: MoviesListRouterProtocol? { get set }
     func viewDidAppear()
     func didSelectItem(movie: MovieGridConfig)
+    func didTapFavorites()
     func fetchMoreMovies()
     func searchMovies(with query: String)
     func cancelSearch()
@@ -36,5 +38,5 @@ protocol MoviesListInteractorInputProtocol: AnyObject {
 
 protocol MoviesListInteractorOutputProtocol: AnyObject {
     func moviesFetched(_ moviesConfig: [MovieGridConfig], page: Int, totalPages: Int)
-    func moviesFetchedFailed()
+    func moviesFetchedFailed(error: String)
 }

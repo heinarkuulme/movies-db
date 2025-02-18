@@ -13,7 +13,9 @@ class MoviesListView: BaseViewController {
         static let discoverTitle: String = "Descubra"
         static let searchTitle: String = "Resultados"
         static let searchPlaceholder: String = "Pesquisar filmes"
-
+        
+        static let barButtonSize: CGFloat = 44.0
+        static let barButtonSpacing: CGFloat = 8.0
     }
     
     //MARK: - Outlets
@@ -43,6 +45,7 @@ class MoviesListView: BaseViewController {
         navigationController?.navigationBar.isTranslucent = false
         navigationItem.largeTitleDisplayMode = .always
         navigationController?.navigationBar.prefersLargeTitles = true
+        self.showActivityIndicator()
         presenter?.viewDidAppear()
     }
     
@@ -60,8 +63,36 @@ class MoviesListView: BaseViewController {
     }
     
     private func setupNavigationBar() {
-        let searchButton = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass.circle"), style: .plain, target: self, action: #selector(didTapSearch))
-        navigationItem.rightBarButtonItem = searchButton
+        
+        let favoritesButton = UIButton(type: .system)
+        favoritesButton.setImage(UIImage(systemName: "heart.circle"), for: .normal)
+        favoritesButton.addTarget(self, action: #selector(didTapFavorites), for: .touchUpInside)
+
+        let searchButton = UIButton(type: .system)
+        searchButton.setImage(UIImage(systemName: "magnifyingglass.circle"), for: .normal)
+        searchButton.addTarget(self, action: #selector(didTapSearch), for: .touchUpInside)
+
+        let stackView = UIStackView(arrangedSubviews: [searchButton, favoritesButton])
+        stackView.axis = .horizontal
+        stackView.spacing = Constants.barButtonSpacing
+        stackView.alignment = .center
+        stackView.distribution = .equalSpacing
+
+        let containerView = UIView()
+        containerView.addSubview(stackView)
+
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            stackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            stackView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+        ])
+
+        containerView.frame = CGRect(x: 0, y: 0, width: Constants.barButtonSize * 2, height: Constants.barButtonSize)
+
+        let barButtonItem = UIBarButtonItem(customView: containerView)
+        navigationItem.rightBarButtonItem = barButtonItem
     }
     
     @objc private func didTapSearch() {
@@ -77,18 +108,25 @@ class MoviesListView: BaseViewController {
             self.navigationItem.title = Constants.searchTitle
         }
     }
+    
+    @objc private func didTapFavorites() {
+        presenter?.didTapFavorites()
+    }
 
 }
 
 extension MoviesListView: MoviesListViewProtocol {
     func showMovies(_ movies: [MovieGridConfig]) {
         DispatchQueue.main.async {
+            self.hideActivityIndicator()
             self.movieGridView.setConfig(movies)
         }
     }
 
-    func showError() {
-        
+    // Simplifiquei a exibição do erro, mas nessa tela poderia ter uma view de error exibindo a mensagem com um botão de tentar novamente
+    func showMovieError(message: String) {
+        self.hideActivityIndicator()
+        self.showError(message)
     }
     
 }

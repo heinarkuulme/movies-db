@@ -34,4 +34,13 @@ class MoviesListRouter: MoviesListRouterProtocol {
             view.present(detailsVC, animated: true, completion: nil)
         }
     }
+    
+    func navigateToFavorites(from view: UIViewController) {
+        let favoritesVC = FavoriteMoviesRouter.createFavoriteList()
+        if let navController = view.navigationController {
+            navController.pushViewController(favoritesVC, animated: true)
+        } else {
+            view.present(favoritesVC, animated: true, completion: nil)
+        }
+    }
 }

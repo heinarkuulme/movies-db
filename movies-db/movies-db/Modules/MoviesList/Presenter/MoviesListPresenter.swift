@@ -28,6 +28,12 @@ class MoviesListPresenter: MoviesListPresenterProtocol {
         }
     }
     
+    func didTapFavorites() {
+        if let viewController = view as? UIViewController {
+            router?.navigateToFavorites(from: viewController)
+        }
+    }
+    
     func fetchMoreMovies() {
         if currentPage < totalPages {
             let nextPage = currentPage + 1
@@ -61,7 +67,7 @@ extension MoviesListPresenter: MoviesListInteractorOutputProtocol {
         view?.showMovies(self.moviesConfig)
     }
     
-    func moviesFetchedFailed() {
-        print("view -> show error")
+    func moviesFetchedFailed(error: String) {
+        view?.showMovieError(message: error)
     }
 }

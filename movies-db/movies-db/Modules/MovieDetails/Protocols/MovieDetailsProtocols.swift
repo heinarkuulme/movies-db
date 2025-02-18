@@ -14,7 +14,8 @@ protocol MovieDetailsRouterProtocol: AnyObject {
 protocol MovieDetailsViewProtocol: AnyObject {
     func showDetails(details: MovieDetailsConfig)
     func updateFavorite(newState: Bool)
-    func showError()
+    func getCurrentImage() -> UIImage?
+    func showDetailsError(message: String)
 }
 
 protocol MovieDetailsPresenterProtocol: AnyObject {
@@ -36,7 +37,7 @@ protocol MovieDetailsInteractorInputProtocol: AnyObject {
 protocol MovieDetailsInteractorOutputProtocol: AnyObject {
     func movieDetailsFetched(details: MovieDetailsConfig)
     func favoriteMovie(isFavorite: Bool)
-    func movieDetailsFetchedFailed()
+    func movieDetailsFetchedFailed(error: String)
     func favoriteMovieUpdated(newState: Bool)
 }
 

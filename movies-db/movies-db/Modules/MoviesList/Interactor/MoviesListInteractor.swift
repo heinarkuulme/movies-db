@@ -23,7 +23,7 @@ class MoviesListInteractor: MoviesListInteractorInputProtocol {
                         self.presenter?.moviesFetched(configs, page: page, totalPages: totalPages)
                     }
                 case .failure(let error):
-                    print("Interactor Error: \(error)")
+                    self.presenter?.moviesFetchedFailed(error: error.message)
                 }
             }
     }
@@ -39,7 +39,7 @@ class MoviesListInteractor: MoviesListInteractorInputProtocol {
                         self.presenter?.moviesFetched(configs, page: page, totalPages: totalPages)
                     }
                 case .failure(let error):
-                    print("Interactor Error: \(error)")
+                    self.presenter?.moviesFetchedFailed(error: error.message)
                 }
             }
     }

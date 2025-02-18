@@ -19,7 +19,7 @@ struct MovieDetailsConfig {
     let overview: String?
     var id: Int?
     let imageURL: URL?
-    let image: UIImage?
+    var image: UIImage?
     var isFavorited: Bool
     
     init(title: String?,
@@ -513,13 +513,17 @@ extension MovieDetailsView: MovieDetailsViewProtocol {
         }
     }
 
+    func getCurrentImage() -> UIImage? {
+        return self.backdropImageView.image
+    }
+    
     func updateFavorite(newState: Bool) {
         DispatchQueue.main.async {
             self.updateFavoriteState(isFavorited: newState)
         }
     }
 
-    func showError() {
-        
+    func showDetailsError(message: String) {
+        self.showError(message)
     }
 }
