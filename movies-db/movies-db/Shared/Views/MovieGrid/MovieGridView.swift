@@ -7,6 +7,9 @@
 
 import UIKit
 
+// Criei um componente de UI, que poderia estar em DS por exemplo, A ideia aqui seria reaproveitar ele em outras telas
+// acabei não reaproveitando propositalmente para explorar outras formas de layout (tableview por exemplo na tela de fav)
+
 public struct MovieGridConfig {
     public let id: Int
     public let title: String

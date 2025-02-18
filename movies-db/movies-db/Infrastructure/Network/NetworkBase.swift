@@ -7,6 +7,10 @@
 
 import Foundation
 
+// Essa classe é um exemplo de uma camada de conexão genérica, poderia estar em um modulo a parte para ser reaproveitada em outros lugares
+// Esse layer de networking poderia evoluir acrescendo mais itens de segurança, como pinagem por exemplo
+// ele possui uma função de log bastante util para debugar
+
 enum RequestMethods: String {
     case get = "GET"
     case post = "POST"

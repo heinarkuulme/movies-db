@@ -195,6 +195,7 @@
 					};
 					667C12B52D62548300777576 = {
 						CreatedOnToolsVersion = 16.0;
+						LastSwiftMigration = 1600;
 						TestTargetID = 667C12952D62548200777576;
 					};
 				};
@@ -514,6 +515,7 @@
 			baseConfigurationReferenceAnchor = 667C12982D62548200777576 /* movies-db */;
 			baseConfigurationReferenceRelativePath = "Infrastructure/Configs/Movies-db-Config.xcconfig";
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 96VQ8X4H7K;
@@ -522,6 +524,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "heinar.kuulme.movies-dbUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = "movies-db";
@@ -533,6 +536,7 @@
 			baseConfigurationReferenceAnchor = 667C12982D62548200777576 /* movies-db */;
 			baseConfigurationReferenceRelativePath = "Infrastructure/Configs/Movies-db-Config.xcconfig";
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 96VQ8X4H7K;

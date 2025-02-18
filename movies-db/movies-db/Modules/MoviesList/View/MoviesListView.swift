@@ -143,6 +143,8 @@ extension MoviesListView: MovieGridViewDelegate {
 }
 
 extension MoviesListView: UISearchResultsUpdating, UISearchBarDelegate {
+    
+    //optei por deixar a buscar de forma automatica sem um botão de busca para ficar mais dinamico, adicionei um timer de 0.5 para realizar a busca após o usuário terminar de digitar (throttling)
     func updateSearchResults(for searchController: UISearchController) {
         searchTimer?.invalidate()
         let searchText = searchController.searchBar.text ?? ""

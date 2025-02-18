@@ -16,9 +16,9 @@ struct MovieDetails: MovieProtocol, Codable {
 
     let backdropPath: String?
     let originalTitle, overview: String?
-    let budget: Int
-    let revenue: Int
-    let runtime: Int
+    let budget: Int?
+    let revenue: Int?
+    let runtime: Int?
     
     enum CodingKeys: String, CodingKey {
         case id

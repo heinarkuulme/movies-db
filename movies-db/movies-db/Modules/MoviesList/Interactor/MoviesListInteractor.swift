@@ -13,8 +13,9 @@ class MoviesListInteractor: MoviesListInteractorInputProtocol {
     
     func fetchMovies(page: Int) {
         MoviesService.Endpoints.discover(page: page)
-            .makeRequest(printResponse: true) { (result: Result<MoviesListResponse, NetworkError>) in
-                
+            .makeRequest(printResponse: true) { [weak self] (result: Result<MoviesListResponse, NetworkError>) in
+                guard let self = self else { return }
+
                 switch result {
                 case .success(let moviesResponse):
                     if let moviesList = moviesResponse.response {
@@ -30,7 +31,9 @@ class MoviesListInteractor: MoviesListInteractorInputProtocol {
     
     func searchMovies(query: String, page: Int) {
         MoviesService.Endpoints.search(query: query, page: page)
-            .makeRequest(printResponse: true) { (result: Result<MoviesListResponse, NetworkError>) in
+            .makeRequest(printResponse: true) { [weak self] (result: Result<MoviesListResponse, NetworkError>) in
+                guard let self = self else { return }
+
                 switch result {
                 case .success(let moviesResponse):
                     if let moviesList = moviesResponse.response {
@@ -95,4 +98,37 @@ class MoviesListInteractor: MoviesListInteractorInputProtocol {
         return configs
     }
     
+}
+
+/// Eu optei por ter um componente de imagem (CustomImageView) que gere o download de imagens e centralizada o cache delas em só lugar.
+/// dessa forma eu posso só trafegar o path da imagem entre as classes do modulo, acredito que dessa forma fique mais simples, e não preciso sempre notificar a view que temos uma nova imagem
+/// o componente lida sozinho com isso
+/// de qualquer forma vou deixar uma função (que não está sendo utilizada) de como seria a implementação baixando as imagens uma a uma aqui no interactor
+/// utilizando uma fila serial para ser thread safety, além de atualizar a view na main thread
+
+/// nesse exemplo as imagens seriam atualizadas uma a uma, outra possibilidade seria baixar todas de uma vez e atualizar a view somente uma vez
+/// nesse caso eu utilizaria um dispatchGroup
+extension MoviesListInteractor {
+    func downloadImages(for movies: [MovieGridConfig]) {
+        let serialQueue = DispatchQueue(label: "movies-db.imageDownloads")
+        
+        for movie in movies {
+            guard let url = movie.coverURL else { continue }
+            
+            URLSession.shared.dataTask(with: url) { data, response, error in
+                if let data = data, let image = UIImage(data: data) {
+                    serialQueue.async {
+                        var updatedMovie = movie
+                        ///não tenho a uiimage na model atualmente, mas nesse cenário seria necessário criar
+                        //updatedMovie.image = image
+                        DispatchQueue.main.async {
+                            ///não tenho a função no protocolo da presenter, nesse cenário seria necessário criar
+                            ///e dentro dela atualizar a view
+                            //self.presenter?.movieImageUpdated(movie: updatedMovie)
+                        }
+                    }
+                }
+            }.resume()
+        }
+    }
 }

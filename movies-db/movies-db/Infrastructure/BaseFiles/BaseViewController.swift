@@ -7,6 +7,7 @@
 
 import UIKit
 
+// classes base para reaproveitar codigo dentro do app
 class BaseViewController: UIViewController {
     
     func showError(_ error: String, title: String = "Error", completion: ((UIAlertAction) -> Void)? = nil) {

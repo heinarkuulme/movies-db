@@ -7,6 +7,7 @@
 
 import UIKit
 
+// componente para lidar com cache de imagens e download de imagens de forma centralizada
 public class CustomImageView: UIImageView {
     
     private static let imageCached = NSCache<NSString, UIImage>()
@@ -79,7 +80,6 @@ public class CustomImageView: UIImageView {
                 }
                 return
             }
-            
             
             CustomImageView.imageCached.setObject(image, forKey: cacheKey as NSString)
             DispatchQueue.main.async {

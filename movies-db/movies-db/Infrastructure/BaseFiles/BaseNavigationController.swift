@@ -7,4 +7,5 @@
 
 import UIKit
 
+//classes base para reaproveitar codigo dentro do app
 class BaseNavigationController: UINavigationController {}
