@@ -23,5 +23,14 @@ class FavoriteMoviesRouter: FavoriteMoviesRouterProtocol {
         
         return view
     }
+    
+    func navigateToMovieDetails(from view: UIViewController, with movieConfig: MovieDetailsConfig) {
+        let detailsVC = MovieDetailsRouter.createMovieDetails(with: movieConfig)
+        if let navController = view.navigationController {
+            navController.pushViewController(detailsVC, animated: true)
+        } else {
+            view.present(detailsVC, animated: true, completion: nil)
+        }
+    }
 
 }

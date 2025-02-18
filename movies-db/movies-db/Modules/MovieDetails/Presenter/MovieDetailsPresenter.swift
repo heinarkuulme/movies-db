@@ -13,13 +13,19 @@ class MovieDetailsPresenter: MovieDetailsPresenterProtocol {
     var interactor: MovieDetailsInteractorInputProtocol?
     var router: MovieDetailsRouterProtocol?
     var movieId: Int = 0
-
-    private var details: MovieDetailsConfig?
+    var details: MovieDetailsConfig?
+    
     private var isFavorite: Bool = false
     
     func viewDidLoad() {
-        interactor?.checkFavoriteMovie(id: movieId)
-        interactor?.fetchMovieDetails(id: movieId)
+        if let movie = details {
+            movieId = movie.id ?? 0
+            interactor?.checkFavoriteMovie(id: movieId)
+            view?.showDetails(details: movie)
+        } else {
+            interactor?.checkFavoriteMovie(id: movieId)
+            interactor?.fetchMovieDetails(id: movieId)
+        }
     }
     
     func toggleFavorite() {

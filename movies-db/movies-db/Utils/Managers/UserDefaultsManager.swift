@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 
 enum UserDefaultsManager: String {
-    case favoriteMovies
     case favoriteMoviesObjects
     
     //Salvar valores primitivos
@@ -32,15 +31,6 @@ enum UserDefaultsManager: String {
             data = try? JSONEncoder().encode(object)
         }
         defaults.set(data, forKey: self.rawValue)
-    }
-    
-    static func getFavoritedMovies() -> [Int] {
-        let defaults = UserDefaults.standard
-        guard let data = defaults.object(forKey: UserDefaultsManager.favoriteMovies.rawValue) as? Data else {
-            return []
-        }
-        
-        return (try? JSONDecoder().decode([Int].self, from: data)) ?? []
     }
     
     static func getFavoriteMoviesObjects() -> [MovieDetailsConfig] {

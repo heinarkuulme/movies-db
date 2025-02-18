@@ -9,6 +9,8 @@ import UIKit
 
 protocol FavoriteMoviesRouterProtocol: AnyObject {
     static func createFavoriteList() -> UIViewController
+    func navigateToMovieDetails(from view: UIViewController, with movieConfig: MovieDetailsConfig)
+
 }
 
 protocol FavoriteMoviesViewProtocol: AnyObject {
@@ -22,6 +24,7 @@ protocol FavoriteMoviesPresenterProtocol: AnyObject {
     var router: FavoriteMoviesRouterProtocol? { get set }
     func viewDidAppear()
     func didTapRemoveFavorite(index: Int)
+    func didSelectItem(movie: MovieDetailsConfig)
 }
 
 protocol FavoriteMoviesInteractorInputProtocol: AnyObject {

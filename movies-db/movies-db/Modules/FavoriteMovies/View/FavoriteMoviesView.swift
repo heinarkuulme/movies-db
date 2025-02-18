@@ -93,4 +93,9 @@ extension FavoriteMoviesView: UITableViewDataSource, UITableViewDelegate {
 
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let movie = movies[indexPath.row]
+        presenter?.didSelectItem(movie: movie)
+    }
 }

@@ -19,7 +19,11 @@ class MoviesListPresenter: MoviesListPresenterProtocol {
     private var totalPages: Int = 1
     
     func viewDidAppear() {
-        interactor?.fetchMovies(page: currentPage)
+        if moviesConfig.isEmpty {
+            interactor?.fetchMovies(page: currentPage)
+        } else {
+            interactor?.refreshFavorites(movies: moviesConfig)
+        }
     }
 
     func didSelectItem(movie: MovieGridConfig) {
@@ -70,4 +74,10 @@ extension MoviesListPresenter: MoviesListInteractorOutputProtocol {
     func moviesFetchedFailed(error: String) {
         view?.showMovieError(message: error)
     }
+    
+    func updatedFavoritesFetched(_ moviesConfig: [MovieGridConfig]) {
+        self.moviesConfig = moviesConfig
+        view?.showMovies(self.moviesConfig)
+    }
+
 }

@@ -13,9 +13,6 @@ class FavoriteMoviesPresenter: FavoriteMoviesPresenterProtocol {
     var interactor: FavoriteMoviesInteractorInputProtocol?
     var router: FavoriteMoviesRouterProtocol?
     var favorites: [MovieDetailsConfig] = []
-
-    private var details: MovieDetailsConfig?
-    private var isFavorite: Bool = false
     
     func viewDidAppear() {
         interactor?.fetchFavorites()
@@ -24,6 +21,12 @@ class FavoriteMoviesPresenter: FavoriteMoviesPresenterProtocol {
     func didTapRemoveFavorite(index: Int) {
         if favorites.indices.contains(index) {
             interactor?.removeFromFavorite(movie: favorites[index])
+        }
+    }
+    
+    func didSelectItem(movie: MovieDetailsConfig) {
+        if let viewController = view as? UIViewController {
+            router?.navigateToMovieDetails(from: viewController, with: movie)
         }
     }
 }

@@ -30,29 +30,18 @@ class MovieDetailsInteractor: MovieDetailsInteractorInputProtocol {
     }
 
     func checkFavoriteMovie(id: Int) {
-        let favoriteMovies = UserDefaultsManager.getFavoritedMovies()
-        let isFavorite = favoriteMovies.contains(id)
+        let favoriteMovies = UserDefaultsManager.getFavoriteMoviesObjects()
+        let favoriteMoviesIds = favoriteMovies.compactMap({ $0.id })
+        let isFavorite = favoriteMoviesIds.contains(id)
         presenter?.favoriteMovie(isFavorite: isFavorite)
     }
 
     func toggleFavorite(movie: MovieDetailsConfig, newState: Bool) {
-        guard let movieID = movie.id else { return }
-
-        var favoriteIds = UserDefaultsManager.getFavoritedMovies()
-
         if newState {
-            if !favoriteIds.contains(movieID) {
-                favoriteIds.append(movieID)
-            }
-        
             UserDefaultsManager.appendFavoriteMovieObject(movie)
         } else {
-        
-            favoriteIds.removeAll(where: { $0 == movieID })
             UserDefaultsManager.removeFavoriteMovieObject(movie)
         }
-
-        UserDefaultsManager.favoriteMovies.setObject(object: favoriteIds)
 
         presenter?.favoriteMovieUpdated(newState: newState)
     }
@@ -87,7 +76,8 @@ class MovieDetailsInteractor: MovieDetailsInteractorInputProtocol {
         let vote = "\(formatDecimal(details?.voteAverage ?? 0.0))"
 
         let backdropURL: URL? = URL(string: BaseUrls.images.rawValue + (details?.backdropPath ?? ""))
-        let favorites = UserDefaultsManager.getFavoritedMovies()
+        let favorites = UserDefaultsManager.getFavoriteMoviesObjects()
+        let favoriteIds = favorites.compactMap({ $0.id })
 
         return .init(
             title: details?.title,
@@ -101,7 +91,7 @@ class MovieDetailsInteractor: MovieDetailsInteractorInputProtocol {
             id: details?.id,
             imageURL: backdropURL,
             image: nil,
-            isFavorited: favorites.contains(details?.id ?? 0)
+            isFavorited: favoriteIds.contains(details?.id ?? 0)
         )
     }
 

@@ -34,9 +34,11 @@ protocol MoviesListInteractorInputProtocol: AnyObject {
     var presenter: MoviesListInteractorOutputProtocol? { get set }
     func fetchMovies(page: Int)
     func searchMovies(query: String, page: Int)
+    func refreshFavorites(movies: [MovieGridConfig])
 }
 
 protocol MoviesListInteractorOutputProtocol: AnyObject {
     func moviesFetched(_ moviesConfig: [MovieGridConfig], page: Int, totalPages: Int)
     func moviesFetchedFailed(error: String)
+    func updatedFavoritesFetched(_ moviesConfig: [MovieGridConfig])
 }

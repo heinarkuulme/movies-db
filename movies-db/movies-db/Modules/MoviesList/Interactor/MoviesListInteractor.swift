@@ -44,6 +44,23 @@ class MoviesListInteractor: MoviesListInteractorInputProtocol {
             }
     }
     
+    func refreshFavorites(movies: [MovieGridConfig]) {
+        let favoriteMovies = UserDefaultsManager.getFavoriteMoviesObjects()
+        let favoriteMoviesIds: [Int] = favoriteMovies.compactMap({ $0.id })
+        
+        let newMovies: [MovieGridConfig] = movies.compactMap { movie in
+            return MovieGridConfig(
+                id: movie.id,
+                title: movie.title,
+                releaseDate: movie.releaseDate,
+                coverURL: movie.coverURL,
+                rating: movie.rating,
+                isFavorited: favoriteMoviesIds.contains(movie.id)
+            )
+        }
+        presenter?.updatedFavoritesFetched(newMovies)
+    }
+    
     private func getMoviesConfig(_ movies: [Movie]?) -> [MovieGridConfig] {
         let configs: [MovieGridConfig] = movies?.compactMap { movie in
             guard let id = movie.id,
@@ -63,7 +80,8 @@ class MoviesListInteractor: MoviesListInteractorInputProtocol {
                 formattedDate = date.toString()
             }
             
-            let favoriteMovies = UserDefaultsManager.getFavoritedMovies()
+            let favoriteMovies = UserDefaultsManager.getFavoriteMoviesObjects()
+            let favoriteMoviesIds: [Int] = favoriteMovies.compactMap({ $0.id })
             
             return MovieGridConfig(
                 id: id,
@@ -71,7 +89,7 @@ class MoviesListInteractor: MoviesListInteractorInputProtocol {
                 releaseDate: formattedDate,
                 coverURL: coverURL,
                 rating: Float(voteAverage),
-                isFavorited: favoriteMovies.contains(id)
+                isFavorited: favoriteMoviesIds.contains(id)
             )
         } ?? []
         return configs

@@ -175,7 +175,7 @@ class MovieDetailsView: BaseViewController {
     
     private lazy var originalTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 12)
+        label.font = .systemFont(ofSize: 14)
         label.textColor = UIColor(hex: "#69696C")
         label.numberOfLines = 0
         return label
@@ -183,7 +183,7 @@ class MovieDetailsView: BaseViewController {
 
     private lazy var releaseDateLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 12)
+        label.font = .systemFont(ofSize: 14)
         label.textColor = UIColor(hex: "#69696C")
         label.numberOfLines = 0
         return label
@@ -191,7 +191,7 @@ class MovieDetailsView: BaseViewController {
 
     private lazy var durationLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 12)
+        label.font = .systemFont(ofSize: 14)
         label.textColor = UIColor(hex: "#69696C")
         label.numberOfLines = 0
         return label
@@ -256,7 +256,7 @@ class MovieDetailsView: BaseViewController {
     
     private lazy var budgetTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 9)
+        label.font = .systemFont(ofSize: 10)
         label.textColor = UIColor(hex: "#69696C")
         label.text = Constants.budgetText
         label.textAlignment = .center
@@ -273,7 +273,7 @@ class MovieDetailsView: BaseViewController {
     
     private lazy var revenueTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 9)
+        label.font = .systemFont(ofSize: 10)
         label.textColor = UIColor(hex: "#69696C")
         label.text = Constants.revenueText
         label.textAlignment = .center
@@ -290,7 +290,7 @@ class MovieDetailsView: BaseViewController {
     
     private lazy var voteTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 9)
+        label.font = .systemFont(ofSize: 10)
         label.textColor = UIColor(hex: "#69696C")
         label.text = Constants.voteText
         label.textAlignment = .center
@@ -337,7 +337,7 @@ class MovieDetailsView: BaseViewController {
     
     private lazy var overviewLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 12)
+        label.font = .systemFont(ofSize: 14)
         label.textColor = .white
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false

@@ -23,6 +23,7 @@ protocol MovieDetailsPresenterProtocol: AnyObject {
     var interactor: MovieDetailsInteractorInputProtocol? { get set }
     var router: MovieDetailsRouterProtocol? { get set }
     var movieId: Int { get set }
+    var details: MovieDetailsConfig? { get set }
     func viewDidLoad()
     func toggleFavorite()
 }

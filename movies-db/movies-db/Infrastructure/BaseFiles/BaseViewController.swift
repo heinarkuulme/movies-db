@@ -59,7 +59,7 @@ class BaseViewController: UIViewController {
                 dimmingView.removeFromSuperview()
             }
             
-            if let activityIndicator = self.view.viewWithTag(999) as? UIActivityIndicatorView {
+            if let _ = self.view.viewWithTag(999) as? UIActivityIndicatorView {
                 self.hideActivityIndicator()
             }
         }
