@@ -11,7 +11,7 @@ class MoviesListInteractor: MoviesListInteractorInputProtocol {
 
     weak var presenter: MoviesListInteractorOutputProtocol?
     
-    func fetchMovies(page: Int, favoriteMovies: [Int]) {
+    func fetchMovies(page: Int) {
         MoviesService.Endpoints.discover(page: page)
             .makeRequest(printResponse: true) { (result: Result<MoviesListResponse, NetworkError>) in
                 
@@ -19,7 +19,7 @@ class MoviesListInteractor: MoviesListInteractorInputProtocol {
                 case .success(let moviesResponse):
                     if let moviesList = moviesResponse.response {
                         let totalPages = moviesList.totalPages ?? 1
-                        let configs = self.getMoviesConfig(moviesList.results, favoriteMovies: favoriteMovies)
+                        let configs = self.getMoviesConfig(moviesList.results)
                         self.presenter?.moviesFetched(configs, page: page, totalPages: totalPages)
                     }
                 case .failure(let error):
@@ -28,28 +28,23 @@ class MoviesListInteractor: MoviesListInteractorInputProtocol {
             }
     }
     
-    func fetchFavoriteMovies() {
-        let favoriteMovies = UserDefaultsManager.getFavoritedMovies()
-        presenter?.favoriteMoviesFetched(ids: favoriteMovies)
-    }
-
-    func toggleFavorite(for movie: MovieGridConfig) {
-        var favorites = UserDefaultsManager.getFavoritedMovies()
-        let newState: Bool
-
-        if favorites.contains(movie.id) {
-            favorites.removeAll { $0 == movie.id }
-            newState = false
-        } else {
-            favorites.append(movie.id)
-            newState = true
-        }
-
-        UserDefaultsManager.favoriteMovies.setObject(object: favorites)
-        presenter?.favoriteMovieUpdated(ids: favorites, for: movie.id, newState: newState)
+    func searchMovies(query: String, page: Int) {
+        MoviesService.Endpoints.search(query: query, page: page)
+            .makeRequest(printResponse: true) { (result: Result<MoviesListResponse, NetworkError>) in
+                switch result {
+                case .success(let moviesResponse):
+                    if let moviesList = moviesResponse.response {
+                        let totalPages = moviesList.totalPages ?? 1
+                        let configs = self.getMoviesConfig(moviesList.results)
+                        self.presenter?.moviesFetched(configs, page: page, totalPages: totalPages)
+                    }
+                case .failure(let error):
+                    print("Interactor Error: \(error)")
+                }
+            }
     }
     
-    private func getMoviesConfig(_ movies: [Movie]?, favoriteMovies: [Int]) -> [MovieGridConfig] {
+    private func getMoviesConfig(_ movies: [Movie]?) -> [MovieGridConfig] {
         let configs: [MovieGridConfig] = movies?.compactMap { movie in
             guard let id = movie.id,
                   let title = movie.title,
@@ -60,11 +55,20 @@ class MoviesListInteractor: MoviesListInteractorInputProtocol {
             }
             
             let coverURL: URL? = URL(string: BaseUrls.images.rawValue + posterPath)
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            
+            var formattedDate = releaseDate
+            if let date = dateFormatter.date(from: releaseDate) {
+                formattedDate = date.toString()
+            }
+            
+            let favoriteMovies = UserDefaultsManager.getFavoritedMovies()
             
             return MovieGridConfig(
                 id: id,
                 title: title,
-                releaseDate: releaseDate,
+                releaseDate: formattedDate,
                 coverURL: coverURL,
                 rating: Float(voteAverage),
                 isFavorited: favoriteMovies.contains(id)

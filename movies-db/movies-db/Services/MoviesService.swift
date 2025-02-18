@@ -11,13 +11,16 @@ class MoviesService {
     enum Endpoints: RequestBase {
         case discover(page: Int)
         case search(query: String, page: Int)
+        case details(id: Int)
         
         var path: String {
             switch self {
             case .discover:
                 "/discover/movie"
-            case .search(let query, let page):
-                "/search/movie?query=\(query)&page=\(page)"
+            case .search:
+                "/search/movie"
+            case .details(let id):
+                "/movie/\(id)"
             }
         }
         
@@ -39,6 +42,8 @@ class MoviesService {
                 ["page": page]
             case .search(let query, let page):
                 ["page": page, "query": query]
+            default:
+                nil
             }
         }
         
@@ -50,6 +55,7 @@ class MoviesService {
         
         var enconding: RequestEncondig {
             switch self {
+            case .details: .json
             default: .url
             }
         }

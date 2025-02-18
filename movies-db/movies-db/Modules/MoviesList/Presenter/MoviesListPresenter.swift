@@ -17,34 +17,38 @@ class MoviesListPresenter: MoviesListPresenterProtocol {
     private var moviesConfig: [MovieGridConfig] = []
     private var currentPage: Int = 1
     private var totalPages: Int = 1
-    private var favoriteMovies: [Int] = []
     
-    func viewDidLoad() {
-        interactor?.fetchFavoriteMovies()
-        interactor?.fetchMovies(page: currentPage, favoriteMovies: favoriteMovies)
+    func viewDidAppear() {
+        interactor?.fetchMovies(page: currentPage)
     }
 
     func didSelectItem(movie: MovieGridConfig) {
-        interactor?.toggleFavorite(for: movie)
+        if let viewController = view as? UIViewController {
+            router?.navigateToMovieDetails(from: viewController, with: movie.id)
+        }
     }
     
     func fetchMoreMovies() {
         if currentPage < totalPages {
             let nextPage = currentPage + 1
-            interactor?.fetchMovies(page: nextPage, favoriteMovies: favoriteMovies)
+            interactor?.fetchMovies(page: nextPage)
         }
+    }
+    
+    func searchMovies(with query: String) {
+        currentPage = 1
+        totalPages = 1
+        interactor?.searchMovies(query: query, page: currentPage)
+    }
+
+    func cancelSearch() {
+        currentPage = 1
+        totalPages = 1
+        interactor?.fetchMovies(page: currentPage)
     }
 }
 
 extension MoviesListPresenter: MoviesListInteractorOutputProtocol {
-    func favoriteMoviesFetched(ids: [Int]) {
-        if self.favoriteMovies.isEmpty {
-            favoriteMovies = ids
-        } else {
-            favoriteMovies.append(contentsOf: ids)
-        }
-    }
-
     func moviesFetched(_ moviesConfig: [MovieGridConfig], page: Int, totalPages: Int) {
         if page == 1 {
             self.moviesConfig = moviesConfig
@@ -57,15 +61,6 @@ extension MoviesListPresenter: MoviesListInteractorOutputProtocol {
         view?.showMovies(self.moviesConfig)
     }
     
-    func favoriteMovieUpdated(ids: [Int], for movieID: Int, newState: Bool) {
-        if let index = moviesConfig.firstIndex(where: { $0.id == movieID }) {
-            moviesConfig[index].isFavorited = newState
-            favoriteMovies = ids
-            let updatedMovie = moviesConfig[index]
-            view?.updateFavorite(for: updatedMovie)
-        }
-    }
-
     func moviesFetchedFailed() {
         print("view -> show error")
     }

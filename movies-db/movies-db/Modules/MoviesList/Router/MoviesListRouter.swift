@@ -25,4 +25,13 @@ class MoviesListRouter: MoviesListRouterProtocol {
         return view
     }
 
+    
+    func navigateToMovieDetails(from view: UIViewController, with movieId: Int) {
+        let detailsVC = MovieDetailsRouter.createMovieDetails(id: movieId)
+        if let navController = view.navigationController {
+            navController.pushViewController(detailsVC, animated: true)
+        } else {
+            view.present(detailsVC, animated: true, completion: nil)
+        }
+    }
 }

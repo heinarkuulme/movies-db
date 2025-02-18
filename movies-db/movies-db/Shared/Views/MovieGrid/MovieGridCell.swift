@@ -7,10 +7,6 @@
 
 import UIKit
 
-protocol MovieGridCellDelegate: AnyObject {
-    func movieGridCell(_ cell: MovieGridCell, didToggleFavoriteFor movie: MovieGridConfig)
-}
-
 class MovieGridCell: UICollectionViewCell {
     
     private enum Constants {
@@ -23,9 +19,11 @@ class MovieGridCell: UICollectionViewCell {
         static let textSpacing: CGFloat = 1.0
         static let ratingSpacing: CGFloat = 7.0
         static let borderWidth: CGFloat = 1.0
+        static let calendarSize: CGFloat = 20.0
         
         static let favoritedImage: String = "heart.fill"
         static let favoriteImage: String = "heart"
+        static let releaseDateImage: String = "calendar"
     }
     
     private lazy var containerView: UIView = {
@@ -51,18 +49,14 @@ class MovieGridCell: UICollectionViewCell {
         view.layer.cornerRadius = Constants.favoriteContainerSize / 2
         view.layer.borderWidth = Constants.borderWidth
         view.layer.borderColor = UIColor.black.withAlphaComponent(0.75).cgColor
-        view.isUserInteractionEnabled = true
-        let tap = UITapGestureRecognizer(target: self, action: #selector(favoriteButtonTapped))
-        view.addGestureRecognizer(tap)
         return view
     }()
     
-    private lazy var favoriteButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.tintColor = .init(hex: "#d1453b").withAlphaComponent(0.8)
-        button.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
-        return button
+    private lazy var favoriteIcon: UIImageView = {
+        let image = UIImageView()
+        image.translatesAutoresizingMaskIntoConstraints = false
+        image.tintColor = .init(hex: "#d1453b").withAlphaComponent(0.8)
+        return image
     }()
     
     private lazy var titleLabel: UILabel = {
@@ -83,13 +77,21 @@ class MovieGridCell: UICollectionViewCell {
         return label
     }()
     
+    private lazy var releaseDateImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.tintColor = .init(hex: "#99999e")
+        imageView.image = UIImage(systemName: Constants.releaseDateImage)
+        return imageView
+    }()
+    
     private lazy var ratingBarView: MovieGridRatingView = {
         let view = MovieGridRatingView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    weak var delegate: MovieGridCellDelegate?
     private var movie: MovieGridConfig?
     
     override init(frame: CGRect) {
@@ -103,7 +105,7 @@ class MovieGridCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        favoriteButton.transform = .identity
+        favoriteIcon.transform = .identity
         favoriteContainerView.transform = .identity
     }
     
@@ -111,9 +113,10 @@ class MovieGridCell: UICollectionViewCell {
         contentView.addSubview(containerView)
         containerView.addSubview(coverImageView)
         containerView.addSubview(favoriteContainerView)
-        favoriteContainerView.addSubview(favoriteButton)
+        favoriteContainerView.addSubview(favoriteIcon)
         containerView.addSubview(titleLabel)
         containerView.addSubview(releaseDateLabel)
+        containerView.addSubview(releaseDateImage)
         containerView.addSubview(ratingBarView)
 
         NSLayoutConstraint.activate([
@@ -132,17 +135,22 @@ class MovieGridCell: UICollectionViewCell {
             favoriteContainerView.widthAnchor.constraint(equalToConstant: Constants.favoriteContainerSize),
             favoriteContainerView.heightAnchor.constraint(equalToConstant: Constants.favoriteContainerSize),
 
-            favoriteButton.centerXAnchor.constraint(equalTo: favoriteContainerView.centerXAnchor),
-            favoriteButton.centerYAnchor.constraint(equalTo: favoriteContainerView.centerYAnchor),
-            favoriteButton.widthAnchor.constraint(equalToConstant: Constants.favoriteSize),
-            favoriteButton.heightAnchor.constraint(equalToConstant: Constants.favoriteSize),
+            favoriteIcon.centerXAnchor.constraint(equalTo: favoriteContainerView.centerXAnchor),
+            favoriteIcon.centerYAnchor.constraint(equalTo: favoriteContainerView.centerYAnchor),
+            favoriteIcon.widthAnchor.constraint(equalToConstant: Constants.favoriteSize),
+            favoriteIcon.heightAnchor.constraint(equalToConstant: Constants.favoriteSize),
 
             titleLabel.topAnchor.constraint(equalTo: coverImageView.bottomAnchor, constant: Constants.padding),
             titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: Constants.padding),
             titleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -Constants.padding),
             
-            releaseDateLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: Constants.textSpacing),
-            releaseDateLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: Constants.padding),
+            releaseDateImage.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: Constants.textSpacing),
+            releaseDateImage.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: Constants.padding),
+            releaseDateImage.widthAnchor.constraint(equalToConstant: Constants.calendarSize),
+            releaseDateImage.heightAnchor.constraint(equalToConstant: Constants.calendarSize),
+
+            releaseDateLabel.centerYAnchor.constraint(equalTo: releaseDateImage.centerYAnchor),
+            releaseDateLabel.leadingAnchor.constraint(equalTo: releaseDateImage.trailingAnchor, constant: Constants.padding),
             releaseDateLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -Constants.padding),
 
             ratingBarView.topAnchor.constraint(equalTo: releaseDateLabel.bottomAnchor, constant: Constants.ratingSpacing),
@@ -165,24 +173,7 @@ class MovieGridCell: UICollectionViewCell {
     
     private func updateFavoriteState(isFavorited: Bool) {
         let imageName = isFavorited ? Constants.favoritedImage : Constants.favoriteImage
-        favoriteButton.setImage(UIImage(systemName: imageName), for: .normal)
+        favoriteIcon.image = UIImage(systemName: imageName)
     }
-    
-    @objc private func favoriteButtonTapped() {
-        guard var movie = movie else { return }
-        movie.isFavorited.toggle()
-
-        UIView.animate(withDuration: 0.1, animations: {
-            self.favoriteButton.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
-            self.favoriteContainerView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
-        }, completion: { _ in
-            UIView.animate(withDuration: 0.1, animations: {
-                self.favoriteButton.transform = .identity
-                self.favoriteContainerView.transform = .identity
-            }, completion: { _ in
-                self.updateFavoriteState(isFavorited: movie.isFavorited)
-                self.delegate?.movieGridCell(self, didToggleFavoriteFor: movie)
-            })
-        })
-    }
+   
 }

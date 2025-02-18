@@ -27,7 +27,6 @@ public struct MovieGridConfig {
 
 public protocol MovieGridViewDelegate: AnyObject {
     func movieGridView(_ gridView: MovieGridView, didSelectMovie movie: MovieGridConfig)
-    func movieGridView(_ gridView: MovieGridView, didToggleFavoriteFor movie: MovieGridConfig)
     func moviesGridViewDidReachEnd(_ gridView: MovieGridView)
 }
 
@@ -92,15 +91,6 @@ public class MovieGridView: UIView {
         }
     }
     
-    public func updateFavorite(for movie: MovieGridConfig) {
-        if let index = self.config.firstIndex(where: { $0.id == movie.id }) {
-            self.config[index] = movie
-            let indexPath = IndexPath(item: index, section: 0)
-            UIView.performWithoutAnimation {
-                self.collectionView.reloadItems(at: [indexPath])
-            }
-        }
-    }
 }
 
 extension MovieGridView: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -114,7 +104,6 @@ extension MovieGridView: UICollectionViewDataSource, UICollectionViewDelegateFlo
         }
         let movie = config[indexPath.item]
         cell.configure(with: movie)
-        cell.delegate = self
         return cell
     }
     
@@ -125,12 +114,13 @@ extension MovieGridView: UICollectionViewDataSource, UICollectionViewDelegateFlo
             UIView.animate(withDuration: 0.1, animations: {
                 cell.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
             }, completion: { _ in
-                UIView.animate(withDuration: 0.1) {
+                UIView.animate(withDuration: 0.1, animations: {
                     cell.transform = .identity
-                }
+                }, completion: { _ in
+                    self.delegate?.movieGridView(self, didSelectMovie: config)
+                })
             })
         }
-        delegate?.movieGridView(self, didSelectMovie: config)
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -153,11 +143,5 @@ extension MovieGridView: UICollectionViewDataSource, UICollectionViewDelegateFlo
             isFetchingMore = true
             delegate?.moviesGridViewDidReachEnd(self)
         }
-    }
-}
-
-extension MovieGridView: MovieGridCellDelegate {
-    func movieGridCell(_ cell: MovieGridCell, didToggleFavoriteFor movie: MovieGridConfig) {
-        delegate?.movieGridView(self, didToggleFavoriteFor: movie)
     }
 }
